@@ -1,0 +1,8 @@
+pillow
+numpy
+torchvision
+requests
+tensorflow
+munch
+tqdm
+scipy
