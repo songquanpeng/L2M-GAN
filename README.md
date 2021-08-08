@@ -5,4 +5,4 @@
 + [x] Implement the models.
 + [x] Implement the loss functions.
 + [x] Make it runnable.
-+ [ ] Start the experiment.
++ [x] Start the experiment.
