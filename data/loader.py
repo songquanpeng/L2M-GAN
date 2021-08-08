@@ -1,4 +1,4 @@
-import os
+import random
 from torch.utils import data
 from torch.utils.data.sampler import WeightedRandomSampler
 from torchvision import transforms
@@ -24,8 +24,14 @@ def get_train_loader(train_path, img_size, batch_size, dataset, num_workers=4, *
         num_workers = 0
     norm_mean = [0.5, 0.5, 0.5]
     norm_std = [0.5, 0.5, 0.5]
+    prob = 0.5
+    crop = transforms.RandomResizedCrop(
+        img_size, scale=[0.8, 1.0], ratio=[0.9, 1.1])
+    rand_crop = transforms.Lambda(
+        lambda x: crop(x) if random.random() < prob else x)
     if dataset == 'CelebA':
         transform = transforms.Compose([
+            rand_crop,
             transforms.Resize([img_size, img_size]),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
