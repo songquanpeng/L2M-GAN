@@ -63,8 +63,9 @@ class AdaIN(nn.Module):
 
 
 class AdainResBlk(nn.Module):
-    def __init__(self, dim_in, dim_out, style_dim=64, activation=nn.LeakyReLU(0.2), up_sample=False):
+    def __init__(self, dim_in, dim_out, style_dim=64, w_hpf=0, activation=nn.LeakyReLU(0.2), up_sample=False):
         super().__init__()
+        self.w_hpf = w_hpf
         self.activation = activation
         self.up_sample = up_sample
         self.change_dim = dim_in != dim_out
@@ -98,5 +99,18 @@ class AdainResBlk(nn.Module):
 
     def forward(self, x, s):
         out = self._residual(x, s)
-        out = (out + self._shortcut(x)) / math.sqrt(2)
+        if self.w_hpf == 0:
+            out = (out + self._shortcut(x)) / math.sqrt(2)
         return out
+
+
+class HighPass(nn.Module):
+    def __init__(self, w_hpf, device):
+        super(HighPass, self).__init__()
+        self.filter = torch.tensor([[-1, -1, -1],
+                                    [-1, 8., -1],
+                                    [-1, -1, -1]]).to(device) / w_hpf
+
+    def forward(self, x):
+        filter = self.filter.unsqueeze(0).unsqueeze(1).repeat(x.size(1), 1, 1, 1)
+        return F.conv2d(x, filter, padding=1, groups=x.size(1))

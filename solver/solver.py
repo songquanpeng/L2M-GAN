@@ -55,7 +55,7 @@ class Solver:
     def initialize_parameters(self):
         if self.args.parameter_init == 'he':
             for name, network in self.nets.items():
-                if 'ema' not in name:
+                if 'ema' not in name and 'fan' not in name:
                     print('Initializing %s...' % name, end=' ')
                     network.apply(he_init)
                     print('Done.')
@@ -110,22 +110,26 @@ class Solver:
             sample_org = next(train_fetcher)  # sample that to be translated
             sample_ref = next(train_fetcher)  # reference samples
 
+            masks = nets.fan.get_heatmap(sample_org.x) if args.w_hpf > 0 else None
+
             # Train the discriminator
-            d_loss, d_loss_ref = compute_d_loss(nets, args, sample_org, sample_ref)
+            d_loss, d_loss_ref = compute_d_loss(nets, args, sample_org, sample_ref, masks=masks)
             self.zero_grad()
             d_loss.backward()
             optims.discriminator.step()
 
             # Train the generator
-            g_loss, g_loss_ref = compute_g_loss(nets, args, sample_org, sample_ref)
+            g_loss, g_loss_ref = compute_g_loss(nets, args, sample_org, sample_ref, masks=masks)
             self.zero_grad()
             g_loss.backward()
             optims.generator.step()
             optims.mapping_network.step()
+            optims.style_encoder.step()
 
             # Update generator_ema
             moving_average(nets.generator, nets_ema.generator, beta=args.ema_beta)
             moving_average(nets.mapping_network, nets_ema.mapping_network, beta=args.ema_beta)
+            moving_average(nets.style_encoder, nets_ema.style_encoder, beta=0.999)
 
             if step % args.log_every == 0:
                 elapsed = time.time() - start_time
