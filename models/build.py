@@ -4,7 +4,8 @@ from models.generator import Generator
 from models.discriminator import Discriminator
 from models.style_transformer import StyleTransformer
 from models.style_encoder import StyleEncoder
-from models.wing import FAN
+from models.fan import FAN
+from models.resnet18 import ResNet18
 
 
 def build_model(args):
@@ -28,5 +29,9 @@ def build_model(args):
         fan = FAN(fname_pretrained=args.wing_path).eval()
         nets.fan = fan
         nets_ema.fan = fan
+
+    resnet18 = ResNet18(args)
+    nets.resnet18 = resnet18
+    nets_ema.resnet18 = resnet18
 
     return nets, nets_ema

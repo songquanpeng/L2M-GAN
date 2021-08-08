@@ -55,7 +55,7 @@ class Solver:
     def initialize_parameters(self):
         if self.args.parameter_init == 'he':
             for name, network in self.nets.items():
-                if 'ema' not in name and 'fan' not in name:
+                if 'ema' not in name and 'fan' not in name and 'resnet18' not in name:
                     print('Initializing %s...' % name, end=' ')
                     network.apply(he_init)
                     print('Done.')
@@ -118,18 +118,18 @@ class Solver:
             d_loss.backward()
             optims.discriminator.step()
 
-            # Train the generator
+            # Train the generator, style_encoder and style_transformer
             g_loss, g_loss_ref = compute_g_loss(nets, args, sample_org, sample_ref, masks=masks)
             self.zero_grad()
             g_loss.backward()
             optims.generator.step()
-            optims.mapping_network.step()
             optims.style_encoder.step()
+            optims.style_transformer.step()
 
-            # Update generator_ema
+            # Update corresponding ema version models
             moving_average(nets.generator, nets_ema.generator, beta=args.ema_beta)
-            moving_average(nets.mapping_network, nets_ema.mapping_network, beta=args.ema_beta)
-            moving_average(nets.style_encoder, nets_ema.style_encoder, beta=0.999)
+            moving_average(nets.style_encoder, nets_ema.style_encoder, beta=args.ema_beta)
+            moving_average(nets.style_transformer, nets_ema.style_transformer, beta=args.ema_beta)
 
             if step % args.log_every == 0:
                 elapsed = time.time() - start_time
@@ -180,7 +180,7 @@ class Solver:
                         delete_model(args.model_dir, best_step)
                     best_fid = fid
                     best_step = step
-                info = f"step: {step:.2f} current fid: {fid:.2f} history best fid: {best_fid:.2f}"
+                info = f"step: {step} current fid: {fid:.2f} history best fid: {best_fid:.2f}"
                 send_message(info, args.exp_id)
                 write_record(info, args.record_file)
         send_message("Model training completed.")

@@ -21,7 +21,7 @@ class StyleTransformer(nn.Module):
                                                       nn.Linear(style_dim, style_dim), nn.ReLU(),
                                                       nn.Linear(style_dim, style_dim))]
 
-    def forward(self, s, y):
+    def forward(self, s, y, return_all=False):
         s_unrelated = self.decomposer(s)
         s_related = s - s_unrelated
         out = []
@@ -29,6 +29,8 @@ class StyleTransformer(nn.Module):
             out += [layer(s_related)]
         out = torch.stack(out, dim=1)  # (batch, num_domains, style_dim)
         idx = torch.LongTensor(range(y.size(0))).to(y.device)
-        s_related = out[idx, y]  # (batch, style_dim)
-        s = s_related + s_unrelated
-        return s
+        s_related_tilde = out[idx, y]  # (batch, style_dim)
+        s_tilde = s_related_tilde + s_unrelated
+        if return_all:
+            return s_tilde, s_unrelated, s_related, s_related_tilde
+        return s_tilde

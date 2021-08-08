@@ -65,6 +65,7 @@ def parse_args():
     parser.add_argument('--g_max_conv_dim', type=int, default=512)
     parser.add_argument('--d_max_conv_dim', type=int, default=512)
     parser.add_argument('--se_max_conv_dim', type=int, default=512)
+    parser.add_argument('--w_hpf', type=float, default=1, help='Weight for high-pass filtering')
 
     # Dataset related arguments.
     parser.add_argument('--dataset', type=str, required=True)
@@ -109,8 +110,9 @@ def parse_args():
     parser.add_argument('--lambda_adv', type=float, default=1)
     parser.add_argument('--lambda_reg', type=float, default=1, help='Weight for R1 regularization')
     parser.add_argument('--lambda_cyc', type=float, default=1, help='Weight for cyclic consistency loss')
-    parser.add_argument('--lambda_sty', type=float, default=1, help='Weight for style reconstruction loss')
-    parser.add_argument('--w_hpf', type=float, default=1, help='weight for high-pass filtering')
+    parser.add_argument('--lambda_sty', type=float, default=2, help='Weight for style reconstruction loss')
+    parser.add_argument('--lambda_per', type=float, default=2, help='Weight for perceptual loss')
+    parser.add_argument('--lambda_ort', type=float, default=1, help='Weight for orthogonality loss')
 
     # Step related arguments.
     parser.add_argument('--log_every', type=int, default=10)
