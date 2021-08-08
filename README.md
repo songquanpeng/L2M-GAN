@@ -3,6 +3,6 @@
 
 ## TODOs
 + [x] Implement the models.
-+ [ ] Implement the loss functions.
++ [x] Implement the loss functions.
 + [ ] Make it runnable.
 + [ ] Start the experiment.
