@@ -4,5 +4,5 @@
 ## TODOs
 + [x] Implement the models.
 + [x] Implement the loss functions.
-+ [ ] Make it runnable.
++ [x] Make it runnable.
 + [ ] Start the experiment.

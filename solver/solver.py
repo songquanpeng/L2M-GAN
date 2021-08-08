@@ -10,7 +10,7 @@ from utils.model import print_network
 from utils.file import delete_dir, write_record, delete_model
 from models.build import build_model
 from solver.utils import he_init, moving_average
-from solver.misc import translate_using_latent, generate_samples
+from solver.misc import translate_using_label, generate_samples
 from solver.loss import compute_g_loss, compute_d_loss
 from data.fetcher import Fetcher
 from metrics.eval import calculate_metrics, calculate_total_fid
@@ -152,20 +152,17 @@ class Solver:
                         self.logger.scalar_summary(tag, value, step)
 
             if step % args.sample_every == 0:
-                repeat_num = 2
                 N = args.batch_size
                 y_trg_list = [torch.tensor(y).repeat(N).to(self.device) for y in range(min(args.num_domains, 5))]
-                z_trg_list = torch.randn(repeat_num, 1, args.latent_dim).repeat(1, N, 1).to(self.device)
-                translate_using_latent(nets, args, fixed_test_sample.x, y_trg_list, z_trg_list,
-                                       os.path.join(args.sample_dir, f"latent_test_{step}.jpg"))
-                translate_using_latent(nets, args, fixed_train_sample.x, y_trg_list, z_trg_list,
-                                       os.path.join(args.sample_dir, f"latent_train_{step}.jpg"))
+                translate_using_label(nets, args, fixed_test_sample, y_trg_list,
+                                      os.path.join(args.sample_dir, f"test_{step}.jpg"))
+                translate_using_label(nets, args, fixed_train_sample, y_trg_list,
+                                      os.path.join(args.sample_dir, f"train_{step}.jpg"))
                 if args.selected_path:
                     N = fixed_selected_samples.shape[0]
                     y_trg_list = [torch.tensor(y).repeat(N).to(self.device) for y in range(min(args.num_domains, 5))]
-                    z_trg_list = torch.randn(repeat_num, 1, args.latent_dim).repeat(1, N, 1).to(self.device)
-                    translate_using_latent(nets, args, fixed_selected_samples, y_trg_list, z_trg_list,
-                                           os.path.join(args.sample_dir, f"latent_selected_{step}.jpg"))
+                    translate_using_label(nets, args, fixed_selected_samples, y_trg_list,
+                                          os.path.join(args.sample_dir, f"selected_{step}.jpg"))
 
             if step % args.save_every == 0:
                 self.save_model(step)
