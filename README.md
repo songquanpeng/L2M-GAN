@@ -13,17 +13,17 @@ and then put it in `./archive/`.
 + [x] Implement the models.
 + [x] Implement the loss functions.
 + [x] Make it runnable.
-+ [x] Start the experiment.
++ [x] Start the experiments.
 
 ## Results
-### Experiment #1: Attribute Smilling
+### Experiment #1: Attribute Smiling
 Final best FID: 16.93 (100k iterations)
 ![default_setting_smiling_test_100000](https://user-images.githubusercontent.com/39998050/129124777-81ea0d92-0733-433f-a8f9-935b2c4d8930.jpg)
 
-The first row is the origin image, the second row is the smiling one and the third row is the non-smiling one.
+The first row is the origin images, the second row is the smiling one and the third row is the non-smiling one.
 
 ### Experiment #2: Attribute Gender
 Final best FID: 33.21 (100k iterations)
 ![default_setting_gender_test_100000](https://user-images.githubusercontent.com/39998050/129124711-7aaf8e70-e119-465e-97b6-df46ea66c54c.jpg)
 
-The first row is the origin image, the second row is the female one and the third row is the male one.
+The first row is the origin images, the second row is the female one and the third row is the male one.
