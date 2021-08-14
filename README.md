@@ -23,7 +23,8 @@ Final best FID: 16.93 (100k iterations)
 The first row is the origin images, the second row is the smiling one and the third row is the non-smiling one.
 
 ### Experiment #2: Attribute Gender
-Final best FID: 33.21 (100k iterations)
-![default_setting_gender_test_100000](https://user-images.githubusercontent.com/39998050/129124711-7aaf8e70-e119-465e-97b6-df46ea66c54c.jpg)
+Final best FID: 32.83 (100k iterations)
+![default_setting_gender_test_100000](https://user-images.githubusercontent.com/39998050/129439702-3a8ddaf0-6aae-4d0d-bf47-e95e86ced870.jpg)
+
 
 The first row is the origin images, the second row is the female one and the third row is the male one.
