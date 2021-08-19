@@ -6,8 +6,8 @@
 2. Download the CelebA-HQ dataset from [here](https://drive.google.com/open?id=1badu11NqxGf6qM3PTTooQDJvQbejgbTv).
 3. Use the script `./bin/split_celeba.py` to generate the dataset split, rename the generated folder to `celeba_hq_smiling` 
 and then put it in `./archive/`.
-4. Make the shell script executable: `chmod u+x ./scripts/train.py`
-5. Execute the shell script: `./scripts/train.py`
+4. Make the shell script executable: `chmod u+x ./scripts/train.sh`
+5. Execute the shell script: `./scripts/train.sh`
 
 ## TODOs
 + [x] Implement the models.
